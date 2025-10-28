@@ -1,0 +1,60 @@
+# Built application files
+*.apk
+*.ap_
+*.aab
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java/Kotlin class files
+*.class
+
+# Generated files
+build/
+out/
+bin/
+gen/
+
+# Gradle files
+.gradle/
+build/
+local.properties
+
+# Android Studio specific
+.idea/
+*.iml
+captures/
+.navigation/
+
+# Logs
+*.log
+
+# Keystore files
+*.jks
+*.keystore
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Jetpack / AndroidX / Kotlin
+*.kotlin_module
+*.kotlin_metadata
+
+# NDK / C++ build files
+obj/
+*.so
+
+# Kotlin / Gradle caches
+.cxx/
+.externalNativeBuild/
+
+# JetBrains IDEs
+*.iws
+*.ipr
+*.iml
+
+# Debug / Misc
+*.orig
+*.rej
+*.swp
