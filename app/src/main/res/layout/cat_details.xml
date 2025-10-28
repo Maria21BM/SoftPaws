@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <GridLayout
+        android:id="@+id/catGridLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alignmentMode="alignMargins"
+        android:columnCount="2"
+        android:orientation="horizontal"
+        android:rowCount="10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/name"
+            style="@style/CatLabelText"
+            android:text="@string/name" />
+
+        <TextView
+            android:id="@+id/nameValue"
+            style="@style/CatValueText"
+            tools:text="Abyssinian" />
+
+        <TextView
+            android:id="@+id/origin"
+            style="@style/CatLabelText"
+            android:text="@string/origin" />
+
+        <TextView
+            android:id="@+id/originValue"
+            style="@style/CatValueText"
+            tools:text="Abyssinian" />
+
+        <TextView
+            android:id="@+id/temperament"
+            style="@style/CatLabelText"
+            android:text="@string/temperament" />
+
+        <TextView
+            android:id="@+id/temperamentValue"
+            style="@style/CatValueText"
+            tools:text="Abyssinian" />
+
+        <TextView
+            android:id="@+id/lifespan"
+            style="@style/CatLabelText"
+            android:text="@string/lifespan" />
+
+        <TextView
+            android:id="@+id/lifespanValue"
+            style="@style/CatValueText"
+            tools:text="Abyssinian" />
+
+        <TextView
+            android:id="@+id/intelligence"
+            style="@style/CatLabelText"
+            android:text="@string/intelligence" />
+
+        <RatingBar
+            android:id="@+id/intelligenceRating"
+            style="@style/CatRating" />
+
+        <TextView
+            android:id="@+id/affectionLevel"
+            style="@style/CatLabelText"
+            android:text="@string/affection_level" />
+
+        <RatingBar
+            android:id="@+id/affectionLevelRating"
+            style="@style/CatRating" />
+
+        <TextView
+            android:id="@+id/childFriendly"
+            style="@style/CatLabelText"
+            android:text="@string/child_friendly" />
+
+        <RatingBar
+            android:id="@+id/childFriendlyRating"
+            style="@style/CatRating" />
+
+        <TextView
+            android:id="@+id/socialNeeds"
+            style="@style/CatLabelText"
+            android:text="@string/social_needs" />
+
+        <RatingBar
+            android:id="@+id/socialNeedsRating"
+            style="@style/CatRating" />
+    </GridLayout>
+</merge>
