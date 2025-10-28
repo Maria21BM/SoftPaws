@@ -6,6 +6,6 @@ data class ImageData(
     val width: Int,
     val height: Int,
     val mime_type: String,
-    val petData: List<PetData>,
+    val petData: List<CatData>,
     val categories: List<Any>
 )

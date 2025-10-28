@@ -1,6 +1,6 @@
 package com.mariabuliga.softpaws.models
 
-data class PetData(
+data class CatData(
     val id: Int,
     val name: String,
     val weight: String,
