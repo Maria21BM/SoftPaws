@@ -1,9 +1,18 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
+
+val localProps = project.rootProject.file("local.properties")
+val properties = Properties()
+properties.load(localProps.inputStream())
+
+val apiKey = properties.getProperty("API_KEY") ?: ""
+
 
 android {
     namespace = "com.mariabuliga.softpaws"
@@ -17,6 +26,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "API_KEY", "\"live_VFOBdY44p96tpzjopdUcyK1Ucl15kVWAoFEzDn0d7C3mFVTTejzUU6QJvlzJfwZd\"")
+        buildConfigField("String", "BASE_URL", "\"https://thecatapi.com/\"")
     }
 
     buildTypes {
@@ -86,5 +98,8 @@ dependencies {
     val nav_version = "2.9.5"
     implementation("androidx.navigation:navigation-fragment:${nav_version}")
     implementation("androidx.navigation:navigation-ui:${nav_version}")
+
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 
 }
