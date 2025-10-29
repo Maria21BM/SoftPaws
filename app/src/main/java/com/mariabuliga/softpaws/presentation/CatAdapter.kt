@@ -10,7 +10,7 @@ import com.mariabuliga.softpaws.R
 import com.mariabuliga.softpaws.data.model.CatDataItem
 import com.mariabuliga.softpaws.databinding.CatItemBinding
 
-class CatAdapter() : RecyclerView.Adapter<CatAdapter.PetViewHolder>() {
+class CatAdapter(private val catInterface: CatInterface) : RecyclerView.Adapter<CatAdapter.PetViewHolder>() {
 
     inner class PetViewHolder(val binding: CatItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -22,6 +22,10 @@ class CatAdapter() : RecyclerView.Adapter<CatAdapter.PetViewHolder>() {
                 .into(binding.catImage)
 
             binding.catName.text = cat.name
+
+            binding.catImage.setOnClickListener {
+                catInterface.onCatClick(cat)
+            }
         }
 
     }

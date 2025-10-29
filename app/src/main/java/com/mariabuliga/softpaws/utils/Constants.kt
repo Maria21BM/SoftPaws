@@ -2,7 +2,7 @@ package com.mariabuliga.softpaws.utils
 
 object Constants {
 
-    const val TAG = "LOG"
-    const val LIMIT = 20
+    const val TAG = "CATS_APP_LOG"
+    const val LIMIT = 10
 
 }

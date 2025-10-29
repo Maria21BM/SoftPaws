@@ -18,5 +18,9 @@
         android:id="@+id/catDetailsFragment"
         android:name="com.mariabuliga.softpaws.presentation.screens.CatDetailsFragment"
         android:label="fragment_cat_details"
-        tools:layout="@layout/fragment_cat_details" />
+        tools:layout="@layout/fragment_cat_details" >
+        <action
+            android:id="@+id/action_catDetailsFragment_to_catsFragment"
+            app:destination="@id/catsFragment" />
+    </fragment>
 </navigation>
