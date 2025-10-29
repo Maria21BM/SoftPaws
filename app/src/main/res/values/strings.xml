@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SoftPaws</string>
     <string name="cat_image">Cat Image</string>
+    <string name="cat_error_image">Cat Error Image</string>
     <string name="name">Name</string>
     <string name="origin">Origin</string>
     <string name="temperament">Temperament</string>
@@ -9,8 +10,11 @@
     <string name="affection_level">Affection Level</string>
     <string name="child_friendly">Child Friendly</string>
     <string name="social_needs">Social Needs</string>
+    <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="find_out_more">Find out more about the cat here:</string>
     <string name="wikipedia">Wikipedia</string>
     <string name="vet_street">Vet Street</string>
+    <string name="no_app_installed">No app installed than can open this link.</string>
+    <string name="no_data">No data available.</string>
 </resources>

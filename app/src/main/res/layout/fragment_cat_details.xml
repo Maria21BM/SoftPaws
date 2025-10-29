@@ -18,24 +18,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <GridLayout
-        android:id="@+id/catGridLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
-        android:alignmentMode="alignMargins"
-        android:columnCount="2"
-        android:orientation="horizontal"
-        android:rowCount="10"
+    <include
+        android:id="@+id/catDetails"
+        layout="@layout/cat_details"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/catImage">
-
-        <include
-            layout="@layout/cat_details"
-            app:layout_constraintTop_toBottomOf="@id/catImage" />
-
-    </GridLayout>
+        app:layout_constraintTop_toBottomOf="@id/catImage" />
 
     <TextView
         android:id="@+id/catDescription"
@@ -45,7 +33,7 @@
         android:text="@string/description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/catGridLayout" />
+        app:layout_constraintTop_toBottomOf="@id/catDetails" />
 
     <TextView
         android:id="@+id/findOutMore"

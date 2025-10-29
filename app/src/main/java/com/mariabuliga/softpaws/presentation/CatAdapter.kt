@@ -12,7 +12,19 @@ import com.mariabuliga.softpaws.databinding.CatItemBinding
 
 class CatAdapter() : RecyclerView.Adapter<CatAdapter.PetViewHolder>() {
 
-    inner class PetViewHolder(val binding: CatItemBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class PetViewHolder(val binding: CatItemBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(cat: CatDataItem) {
+            Glide.with(itemView)
+                .load(cat.image.url)
+                .placeholder(R.drawable.pet_icon)
+                .error(R.drawable.pet_icon)
+                .into(binding.catImage)
+
+            binding.catName.text = cat.name
+        }
+
+    }
 
     private val diffUtil = object : DiffUtil.ItemCallback<CatDataItem>() {
         override fun areItemsTheSame(
@@ -52,11 +64,7 @@ class CatAdapter() : RecyclerView.Adapter<CatAdapter.PetViewHolder>() {
     ) {
         val cat = cats[position]
 
-        Glide.with(holder.itemView)
-            .load(cat.image.url)
-            .placeholder(R.drawable.pet_icon)
-            .error(R.drawable.pet_icon)
-            .into(holder.binding.catImage)
+        holder.bind(cat)
     }
 
     override fun getItemCount(): Int {

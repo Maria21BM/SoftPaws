@@ -1,18 +1,9 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
-
-val localProps = project.rootProject.file("local.properties")
-val properties = Properties()
-properties.load(localProps.inputStream())
-
-val apiKey = properties.getProperty("API_KEY") ?: ""
-
 
 android {
     namespace = "com.mariabuliga.softpaws"
@@ -27,7 +18,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "API_KEY", "\"live_VFOBdY44p96tpzjopdUcyK1Ucl15kVWAoFEzDn0d7C3mFVTTejzUU6QJvlzJfwZd\"")
+        buildConfigField(
+            "String",
+            "API_KEY",
+            "\"live_VFOBdY44p96tpzjopdUcyK1Ucl15kVWAoFEzDn0d7C3mFVTTejzUU6QJvlzJfwZd\""
+        )
         buildConfigField("String", "BASE_URL", "\"https://thecatapi.com/\"")
     }
 
