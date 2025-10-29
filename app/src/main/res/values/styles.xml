@@ -18,14 +18,17 @@
         <item name="android:layout_margin">@dimen/dp_10</item>
         <item name="android:textSize">@dimen/sp_16</item>
         <item name="android:textColor">?attr/colorSecondary</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="CatRating">
+    <style name="CatRating" parent="Widget.AppCompat.RatingBar.Indicator">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:numStars">@dimen/no_5</item>
+        <item name="android:numStars">5</item>
         <item name="android:isIndicator">true</item>
-        <item name="android:scaleX">@dimen/no_0.7</item>
-        <item name="android:scaleY">@dimen/no_0.7</item>
+        <item name="android:scaleX">0.7</item>
+        <item name="android:scaleY">0.7</item>
     </style>
 </resources>
