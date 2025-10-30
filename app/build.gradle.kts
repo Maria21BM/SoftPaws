@@ -23,7 +23,7 @@ android {
             "API_KEY",
             "\"live_VFOBdY44p96tpzjopdUcyK1Ucl15kVWAoFEzDn0d7C3mFVTTejzUU6QJvlzJfwZd\""
         )
-        buildConfigField("String", "BASE_URL", "\"https://thecatapi.com/\"")
+        buildConfigField("String", "BASE_URL", "\"https://api.thecatapi.com/\"")
     }
 
     buildTypes {
@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

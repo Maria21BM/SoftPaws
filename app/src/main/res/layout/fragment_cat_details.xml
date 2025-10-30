@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/dp_50">
+    android:paddingBottom="@dimen/dp_100">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -67,6 +67,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="@dimen/dp_15"
             android:text="@string/wikipedia"
+            android:textColor="@color/purple"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/findOutMore" />
 
@@ -77,6 +78,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="@dimen/dp_15"
             android:text="@string/vet_street"
+            android:textColor="@color/purple"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/wikipediaUrl" />
 

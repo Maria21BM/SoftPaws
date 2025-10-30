@@ -10,7 +10,9 @@
     <dimen name="dp_20">20dp</dimen>
     <dimen name="dp_30">30dp</dimen>
     <dimen name="dp_50">50dp</dimen>
+    <dimen name="dp_100">100dp</dimen>
     <dimen name="dp_150">150dp</dimen>
+    <dimen name="dp_180">180dp</dimen>
     <dimen name="dp_350">350dp</dimen>
 
     <dimen name="sp_16">16sp</dimen>
