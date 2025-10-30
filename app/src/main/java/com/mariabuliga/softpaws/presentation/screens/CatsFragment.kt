@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.mariabuliga.softpaws.R
 import com.mariabuliga.softpaws.data.model.CatDataItem
 import com.mariabuliga.softpaws.databinding.FragmentCatsBinding
@@ -18,6 +19,7 @@ import com.mariabuliga.softpaws.presentation.CatAdapter
 import com.mariabuliga.softpaws.presentation.CatInterface
 import com.mariabuliga.softpaws.presentation.CatsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.IOException
 
 @AndroidEntryPoint
 class CatsFragment : Fragment(), CatInterface {
@@ -39,7 +41,7 @@ class CatsFragment : Fragment(), CatInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        catsViewModel.loadInitialCats()
+        catsViewModel.loadInitialCats(requireContext())
         initAdapter()
         initRecyclerView(view)
         setupUI()
@@ -62,6 +64,25 @@ class CatsFragment : Fragment(), CatInterface {
     }
 
     fun setupUI() {
+        binding.swipeRefresh.setOnRefreshListener {
+            try {
+                binding.swipeRefresh.isRefreshing = true
+                catsViewModel.refreshCats(requireContext())
+            } catch (e: IOException) {
+                Snackbar.make(
+                    binding.swipeRefresh,
+                    e.message ?: "No internet connection",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            } catch (e: Exception) {
+                Snackbar.make(binding.swipeRefresh, "Something went wrong $e", Snackbar.LENGTH_LONG)
+                    .show()
+            } finally {
+                binding.swipeRefresh.isRefreshing = false
+            }
+
+        }
+
         binding.petRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -72,10 +93,13 @@ class CatsFragment : Fragment(), CatInterface {
 
                 val shouldLoadMore =
                     visibleItemCount + firstVisibleItemPosition >= totalItemCount - 3
-                Log.d("Pagination", "Scrolled: first=$firstVisibleItemPosition total=$totalItemCount")
+                Log.d(
+                    "Pagination",
+                    "Scrolled: first=$firstVisibleItemPosition total=$totalItemCount"
+                )
 
-                if (shouldLoadMore && dy> 0) {
-                    catsViewModel.loadNextPage()
+                if (shouldLoadMore && dy > 0) {
+                    catsViewModel.loadNextPage(requireContext())
                 }
             }
         })
@@ -83,13 +107,22 @@ class CatsFragment : Fragment(), CatInterface {
         binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
-                    catsViewModel.searchCatByName(query)
+                    catsViewModel.searchCatByName(requireContext(), query)
                 }
-               return true
+                return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                return false
+                when {
+                    newText.isNullOrEmpty() -> {
+                        catsViewModel.loadNextPage(requireContext())
+                    }
+
+                    newText.length >= 3 -> {
+                        catsViewModel.searchCatByName(requireContext(), newText)
+                    }
+                }
+                return true
             }
         })
     }
@@ -105,6 +138,19 @@ class CatsFragment : Fragment(), CatInterface {
                 binding.errorLayout.root.visibility = View.GONE
             } else {
                 binding.errorLayout.root.visibility = View.VISIBLE
+            }
+        }
+
+        catsViewModel.emptyListLD.observe(viewLifecycleOwner) { empty ->
+            if (empty) {
+                binding.errorLayout.root.visibility = View.VISIBLE
+                binding.petRecyclerView.visibility = View.GONE
+            }
+        }
+
+        catsViewModel.errorLiveData.observe(viewLifecycleOwner) { pair ->
+            if (pair.first) {
+                Snackbar.make(requireView(), pair.second, Snackbar.LENGTH_LONG).show()
             }
         }
     }
