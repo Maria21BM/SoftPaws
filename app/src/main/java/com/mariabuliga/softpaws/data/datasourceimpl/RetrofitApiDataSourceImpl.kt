@@ -17,7 +17,7 @@ class RetrofitApiDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getCatsByName(query: String?): ApiResult<ArrayList<CatDataItem>> {
-        return handleApi { catService.searchCats(query) }
+        return handleApi { catService.searchCats(apiKey, query) }
     }
 
 }

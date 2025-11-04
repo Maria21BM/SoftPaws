@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.testImplementation
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -49,7 +51,8 @@ android {
 }
 
 dependencies {
-
+    val coroutines_version = "1.3.9"
+    val mockito_version = "2.19.0"
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -59,6 +62,11 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.androidx.arch.core)
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${coroutines_version}")
+    testImplementation("org.mockito:mockito-core:${mockito_version}")
+    testImplementation("io.mockk:mockk:1.13.11")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
 
     // Lifecycle
     val lifecycle_version = "2.9.4"
@@ -79,7 +87,7 @@ dependencies {
     implementation("androidx.room:room-ktx:${room_version}")
 
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${coroutines_version}")
 
     // Dagger Hilt
     implementation("com.google.dagger:hilt-android:2.57.1")
@@ -100,5 +108,6 @@ dependencies {
 
     // SwipeRefresh
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    testImplementation(kotlin("test"))
 
 }

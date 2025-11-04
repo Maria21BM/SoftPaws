@@ -19,8 +19,8 @@ interface CatService {
 
     @GET("v1/breeds/search")
     suspend fun searchCats(
+        @Header("x-api-key") apiKey: String,
         @Query("q") query: String?
     ): Response<ArrayList<CatDataItem>>
-
 
 }
