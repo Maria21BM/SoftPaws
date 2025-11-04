@@ -1,6 +1,7 @@
 package com.mariabuliga.softpaws.domain.repository
 
 import android.util.Log
+import com.mariabuliga.softpaws.data.api.ApiResult
 import com.mariabuliga.softpaws.data.datasource.CacheDataSource
 import com.mariabuliga.softpaws.data.datasource.RetrofitApiDataSource
 import com.mariabuliga.softpaws.data.datasource.RoomDataSource
@@ -28,11 +29,31 @@ class CatRepositoryImpl @Inject constructor(
 
     override suspend fun saveCats(): ArrayList<CatDataItem>? {
         currentPage = 0
-        val newListOfCats = getCatsFromAPI(true)
-        roomDataSource.clearAll()
-        roomDataSource.saveCatsToDB(newListOfCats)
-        cacheDataSource.saveCatsToCache(newListOfCats)
-        return newListOfCats
+        val result = getCatsFromAPI(true)
+        return when (result) {
+            is ApiResult.Success -> {
+                val newListOfCats = result.data
+                roomDataSource.clearAll()
+                roomDataSource.saveCatsToDB(newListOfCats)
+                cacheDataSource.saveCatsToCache(newListOfCats)
+                newListOfCats
+            }
+
+            is ApiResult.Error -> {
+                Log.e(Constants.TAG, "Api Error ${result.code} ${result.message}")
+                null
+            }
+
+            is ApiResult.Exception -> {
+                Log.e(Constants.TAG, "Exception ${result.message}")
+                null
+            }
+
+            is ApiResult.Unauthorized -> {
+                Log.e(Constants.TAG, "Unauthorized.")
+                null
+            }
+        }
     }
 
     //Get cats from Cache Step 2
@@ -65,74 +86,125 @@ class CatRepositoryImpl @Inject constructor(
             Log.e(Constants.TAG, e.message.toString())
         }
 
-        if (roomCats.isNotEmpty()) {
+        return if (roomCats.isNotEmpty()) {
             catList = ArrayList(roomCats)
             catList
         } else {
             val apiCats = getCatsFromAPI(true)
-            roomDataSource.saveCatsToDB(apiCats)
-            apiCats
+            when (apiCats) {
+                is ApiResult.Success -> {
+                    val cats = apiCats.data
+                    roomDataSource.saveCatsToDB(cats)
+                    catList = ArrayList(cats)
+                    catList
+                }
+
+                is ApiResult.Error -> {
+                    Log.e(Constants.TAG, "Api Error ${apiCats.code} ${apiCats.message}")
+                    emptyList()
+                }
+
+                is ApiResult.Exception -> {
+                    Log.e(Constants.TAG, "Exception ${apiCats.message}")
+                    emptyList()
+                }
+
+                is ApiResult.Unauthorized -> {
+                    Log.e(Constants.TAG, "Unauthorized")
+                    emptyList()
+                }
+            }
         }
-        return catList
     }
 
-    private suspend fun getCatsFromAPI(initialLoad: Boolean): ArrayList<CatDataItem> {
+    private suspend fun getCatsFromAPI(initialLoad: Boolean): ApiResult<ArrayList<CatDataItem>> {
         val newCats = ArrayList<CatDataItem>()
+        val response = retrofitApiDataSource.getCats(Constants.LIMIT, currentPage)
 
-        withTimeout(30.seconds) {
+        return withTimeout(30.seconds) {
             try {
-                val response = retrofitApiDataSource.getCats(Constants.LIMIT, currentPage)
-                if (response.isSuccessful && response.body() != null) {
-                    response.body()?.let { cats ->
-                        val filteredCats = cats.filter { it.id.isNotEmpty() }
+                when (response) {
+                    is ApiResult.Success -> {
+                        val filteredCats = response.data.filter { it.id.isNotEmpty() }
                         newCats.addAll(filteredCats)
-
                         if (initialLoad) {
                             catList = ArrayList(filteredCats)
                         } else {
                             catList.addAll(filteredCats)
                         }
+                        ApiResult.Success(ArrayList(filteredCats))
                     }
-                } else if (response.code() == 429) {
-                    Log.e(Constants.TAG, "Rate limit exceeded. Try again later.")
-                } else {
-                    Log.e(Constants.TAG, "Cats API Error: ${response.code()} ${response.message()}")
+
+                    is ApiResult.Error<*> -> {
+                        Log.e(Constants.TAG, "Cats Api Error ${response.code} ${response.message}")
+                        ApiResult.Error(response.code, response.message, response.parsedError)
+                    }
+
+                    is ApiResult.Exception<*> -> {
+                        Log.e(Constants.TAG, "Exception ${response.message}")
+                        ApiResult.Exception(response.message)
+                    }
+
+                    is ApiResult.Unauthorized<*> -> {
+                        Log.e(Constants.TAG, "Session expired.")
+                        ApiResult.Unauthorized()
+                    }
                 }
             } catch (e: Exception) {
                 Log.e(Constants.TAG, e.message.toString())
+                ApiResult.Exception(e.message)
             }
         }
-
-        return newCats
     }
 
     override suspend fun loadNextCats(): List<CatDataItem> {
         val newCats = getCatsFromAPI(false)
-        if (newCats.isNotEmpty()) {
-            currentPage++
-            roomDataSource.saveCatsToDB(newCats)
-            cacheDataSource.saveCatsToCache(newCats)
+        return when (newCats) {
+            is ApiResult.Success -> {
+                val newCats = newCats.data
+                if (newCats.isNotEmpty()) {
+                    currentPage++
+                    roomDataSource.saveCatsToDB(newCats)
+                    cacheDataSource.saveCatsToCache(newCats)
+                    Log.d(
+                        "Pagination",
+                        "Calling API page = $currentPage, returned ${newCats.size} cats"
+                    )
+                }
+                newCats
+            }
+
+            else -> emptyList()
         }
-
-        Log.d("Pagination", "Calling API page = $currentPage, returned ${newCats.size} cats")
-
-        return newCats
     }
 
     override suspend fun getCatsByName(query: String?): ArrayList<CatDataItem> {
         var results: ArrayList<CatDataItem> = ArrayList()
         try {
             val response = retrofitApiDataSource.getCatsByName(query)
-            if (response.isSuccessful) {
-                response.body()?.let { cats ->
-                    val filteredCats = cats.filter { it.id.isNotEmpty() }
+            return when (response) {
+                is ApiResult.Success -> {
+                    val filteredCats = response.data.filter { it.id.isNotEmpty() }
                     results.addAll(filteredCats)
                     searchResults.addAll(filteredCats)
+                    results
                 }
-            } else {
-                Log.e(Constants.TAG, "Search API Error: ${response.code()} ${response.message()}")
-            }
 
+                is ApiResult.Error<*> -> {
+                    Log.e(Constants.TAG, "Search Api Error ${response.code} ${response.message}")
+                    results
+                }
+
+                is ApiResult.Exception<*> -> {
+                    Log.e(Constants.TAG, "Search Api Exception ${response.message}")
+                    results
+                }
+
+                is ApiResult.Unauthorized<*> -> {
+                    Log.e(Constants.TAG, "Session expired.")
+                    results
+                }
+            }
         } catch (e: Exception) {
             Log.e(Constants.TAG, e.message.toString())
         }
