@@ -132,6 +132,7 @@ class CatRepositoryImpl @Inject constructor(
                         } else {
                             catList.addAll(filteredCats)
                         }
+                        currentPage++
                         ApiResult.Success(ArrayList(filteredCats))
                     }
 
@@ -163,7 +164,6 @@ class CatRepositoryImpl @Inject constructor(
             is ApiResult.Success -> {
                 val newCats = newCats.data
                 if (newCats.isNotEmpty()) {
-                    currentPage++
                     roomDataSource.saveCatsToDB(newCats)
                     cacheDataSource.saveCatsToCache(newCats)
                     Log.d(
